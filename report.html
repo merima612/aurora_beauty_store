@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aurora Beauty Store — Monthly Operations &amp; KPI Report</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 32px;
+      color: #1f2937;
+      background-color: #ffffff;
+      line-height: 1.45;
+    }
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: 24px;
+      color: #111827;
+    }
+    h2 {
+      margin: 26px 0 10px 0;
+      font-size: 18px;
+      color: #111827;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 6px;
+    }
+    .subtitle {
+      color: #4b5563;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 16px;
+      background-color: #f9fafb;
+    }
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #374151;
+      letter-spacing: 0.4px;
+    }
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+      margin: 8px 0 4px 0;
+    }
+    .kpi-target {
+      font-size: 12px;
+      color: #4b5563;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13.5px;
+    }
+    th, td {
+      border: 1px solid #d1d5db;
+      padding: 9px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #1f2937;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+    .note {
+      margin-top: 22px;
+      padding: 12px 14px;
+      background-color: #f3f4f6;
+      border-left: 4px solid #374151;
+      font-size: 12.5px;
+      color: #374151;
+    }
+    @media print {
+      body {
+        margin: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Aurora Beauty Store — Monthly Operations &amp; KPI Report</h1>
+  <div class="subtitle">
+    Period: September – November 2026 | Database: aurora_beauty.sqlite (SQLite) | Staff Count: 10
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">G1: Lost Orders (Out of Stock)</div>
+      <div class="kpi-value">7 orders</div>
+      <div class="kpi-target">Target: &le; 1 per month across Sep–Nov 2026</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">G2: Lost Online Orders (Delayed)</div>
+      <div class="kpi-value">9 orders</div>
+      <div class="kpi-target">Target: &le; 2 per month across Sep–Nov 2026</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">G3: Complete Reservations</div>
+      <div class="kpi-value">22 reserved</div>
+      <div class="kpi-target">Target: 0 incomplete reservations per month</div>
+    </div>
+  </div>
+
+  <h2>Database Record Overview</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Table Name</th>
+        <th>Row Count</th>
+        <th>Role in Schema</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Suppliers</td>
+        <td>15</td>
+        <td>Cosmetic wholesale suppliers</td>
+      </tr>
+      <tr>
+        <td>Employees</td>
+        <td>10</td>
+        <td>Store manager, sales, inventory &amp; online sales staff</td>
+      </tr>
+      <tr>
+        <td>Products</td>
+        <td>20</td>
+        <td>Skincare, Haircare, and Makeup catalog</td>
+      </tr>
+      <tr>
+        <td>Stock_Entries</td>
+        <td>15</td>
+        <td>Incoming inventory invoices from suppliers</td>
+      </tr>
+      <tr>
+        <td>Orders</td>
+        <td>210</td>
+        <td>In-store and online customer orders (Sep–Nov 2026)</td>
+      </tr>
+      <tr>
+        <td>Order_Items</td>
+        <td>260</td>
+        <td>Line items linking orders and products</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Low-Stock Products Watchlist (Stock &le; 10 Units)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Barcode</th>
+        <th>Brand</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Stock Qty</th>
+        <th>Selling Price (KM)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>387010010017</td>
+        <td>VelvetMakeup</td>
+        <td>Cream Blush Petal Glow</td>
+        <td>Makeup</td>
+        <td>3</td>
+        <td>12.90</td>
+      </tr>
+      <tr>
+        <td>387010010002</td>
+        <td>La Roche-Posay</td>
+        <td>Cicaplast Baume B5+ 40ml</td>
+        <td>Skincare</td>
+        <td>4</td>
+        <td>25.50</td>
+      </tr>
+      <tr>
+        <td>387010010008</td>
+        <td>Moroccanoil</td>
+        <td>Argan Hair Treatment 25ml</td>
+        <td>Haircare</td>
+        <td>5</td>
+        <td>34.50</td>
+      </tr>
+      <tr>
+        <td>387010010005</td>
+        <td>La Roche-Posay</td>
+        <td>Anthelios UVMune SPF50+ 50ml</td>
+        <td>Skincare</td>
+        <td>6</td>
+        <td>33.90</td>
+      </tr>
+      <tr>
+        <td>387010010014</td>
+        <td>Maybelline</td>
+        <td>Fit Me Matte Foundation 30ml</td>
+        <td>Makeup</td>
+        <td>8</td>
+        <td>18.50</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <strong>Note:</strong> Generated from the seeded SQLite database (<code>aurora_beauty.sqlite</code>) to support Task 4 evaluation of stock accuracy (G1), online response timeliness (G2), and complete reservations (G3).
+  </div>
+</body>
+</html>
