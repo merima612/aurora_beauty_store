@@ -88,10 +88,10 @@ cur.executemany(
     products_data,
 )
 
-# 4. Stock_Entries (15 rows across 3 months: Sep, Oct, Nov 2026)
-start_date = datetime(2026, 9, 1, 9, 30)
+# 4. Stock_Entries (15 rows across > 3 months: Aug 20 - Nov 25, 2026)
+start_date = datetime(2026, 8, 20, 9, 30)
 for i in range(1, 16):
-    entry_dt = (start_date + timedelta(days=i * 5)).strftime("%Y-%m-%d")
+    entry_dt = (start_date + timedelta(days=i * 6)).strftime("%Y-%m-%d")
     inv_num = f"INV-2026-{200 + i}"
     total_inv = round(random.uniform(520.0, 1950.0), 2)
     sup_id = ((i - 1) % 15) + 1
@@ -102,7 +102,7 @@ for i in range(1, 16):
         (inv_num, entry_dt, total_inv, sup_id, emp_id),
     )
 
-# 5. Orders (210 rows across September, October, and November 2026)
+# 5. Orders (210 rows across August, September, October, and November 2026 — over 3 full months)
 statuses_pool = (
     ["Completed"] * 145
     + ["Reserved"] * 22
@@ -123,12 +123,40 @@ customers = [
     ("Ena B.", "+387 62 789-006", "Titova 31, Sarajevo"),
 ]
 
+# Total span ~97 days (Aug 20 to Nov 25, 2026)
 for i in range(1, 211):
-    dt = start_date + timedelta(hours=i * 9)
+    day_offset = int((i - 1) * (96 / 209))
+    base_day = start_date + timedelta(days=day_offset)
+
     status = statuses_pool[i - 1]
     order_type = "Online" if (status == "Lost - Delayed" or i % 2 == 0) else "In-Store"
-    emp_id = random.choice([8, 9, 10]) if order_type == "Online" else random.choice([2, 3, 4])
-    payment = "Cash on Delivery" if order_type == "Online" else random.choice(["Cash", "Card"])
+
+    if order_type == "In-Store":
+        # Store opening hours: 08:00 to 20:59
+        hour = random.randint(8, 20)
+        minute = random.randint(0, 59)
+        second = random.randint(0, 59)
+        dt = base_day.replace(hour=hour, minute=minute, second=second)
+        emp_id = random.choice([2, 3, 4])
+        payment = random.choice(["Cash", "Card"])
+        first_resp_str = None
+    else:
+        hour = random.randint(7, 23)
+        minute = random.randint(0, 59)
+        second = random.randint(0, 59)
+        dt = base_day.replace(hour=hour, minute=minute, second=second)
+        emp_id = random.choice([8, 9, 10])
+        payment = "Cash on Delivery"
+        if status == "Lost - Delayed":
+            delay_minutes = random.randint(180, 720)  # 3 to 12 hours delay
+        else:
+            delay_minutes = random.randint(5, 60)
+        first_resp_str = (dt + timedelta(minutes=delay_minutes)).strftime("%Y-%m-%d %H:%M:%S")
+
+    if status == "Reserved":
+        pickup_deadline_str = (dt + timedelta(days=random.randint(2, 5))).strftime("%Y-%m-%d %H:%M:%S")
+    else:
+        pickup_deadline_str = None
 
     if order_type == "Online" or status == "Reserved":
         cname, cphone, caddr = customers[i % len(customers)]
@@ -139,8 +167,9 @@ for i in range(1, 211):
     cur.execute(
         """INSERT INTO Orders
            (order_number, order_type, employeeId, order_datetime, payment_method,
-            total_amount, status, customer_name, customer_phone, shipping_address)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            total_amount, status, customer_name, customer_phone, shipping_address,
+            first_response_datetime, pickup_deadline)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
             f"ORD-2026-{1000 + i}",
             order_type,
@@ -152,6 +181,8 @@ for i in range(1, 211):
             cname,
             cphone,
             addr,
+            first_resp_str,
+            pickup_deadline_str,
         ),
     )
 
