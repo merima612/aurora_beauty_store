@@ -51,7 +51,7 @@ Aligned with Milestone 1, the Employees table contains 10 employees allocated as
 3 Online Sales (employeeId = 8–10)
 
 Data Generation Explanation
-Synthetic operational data was generated deterministically using a Python script (seed.py) with a fixed seed (random.seed(42)) against the schema defined in schema.sql. The dataset spans three months (September – November 2026) and populates:
+Synthetic operational data was generated deterministically using a Python script (seed.py) with a fixed seed (random.seed(42)) against the schema defined in schema.sql. The dataset spans three months (August – November 2026) and populates:
 
 15 Suppliers
 
@@ -59,7 +59,7 @@ Synthetic operational data was generated deterministically using a Python script
 
 20 Products across Skincare, Haircare, and Makeup
 
-15 Stock Entries across September–November 2026
+15 Stock Entries across August–November 2026
 
 210 Orders (Completed, Reserved, Pending, Cancelled, Lost - Out of Stock, and Lost - Delayed) across September–November 2026
 
