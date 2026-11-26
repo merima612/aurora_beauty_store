@@ -65,6 +65,8 @@ CREATE TABLE Orders (
     customer_name TEXT,
     customer_phone TEXT,
     shipping_address TEXT,
+    first_response_datetime TEXT,
+    pickup_deadline TEXT,
     FOREIGN KEY (employeeId) REFERENCES Employees(employeeId)
 );
 
