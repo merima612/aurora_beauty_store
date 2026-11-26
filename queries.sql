@@ -21,25 +21,32 @@ WHERE o.order_type = 'Online'
 GROUP BY strftime('%Y-%m', o.order_datetime), e.employeeId, e.full_name, e.role
 ORDER BY order_month, delayed_lost_orders DESC;
 
--- QUERY 3 (G3 - Complete reservations): Reserved orders and completeness check of required customer details
+-- QUERY 3 (G3 - Complete reservations): Check whether reserved orders are complete
 SELECT
-    orderId,
-    order_number,
-    order_datetime,
-    customer_name,
-    customer_phone,
-    shipping_address,
-    total_amount,
+    o.orderId,
+    o.order_number,
+    o.order_datetime,
+    o.customer_name,
+    o.customer_phone,
+    o.pickup_deadline,
+    o.total_amount,
     CASE
-        WHEN customer_name IS NULL OR TRIM(customer_name) = ''
-          OR customer_phone IS NULL OR TRIM(customer_phone) = ''
-          OR shipping_address IS NULL OR TRIM(shipping_address) = ''
+        WHEN NULLIF(TRIM(o.customer_name), '') IS NULL
+          OR NULLIF(TRIM(o.customer_phone), '') IS NULL
+          OR DATETIME(o.pickup_deadline) IS NULL
+          OR NOT EXISTS (
+              SELECT 1
+              FROM Order_Items AS oi
+              JOIN Products AS p ON p.productId = oi.productId
+              WHERE oi.orderId = o.orderId
+                AND oi.quantity > 0
+          )
         THEN 'Incomplete'
         ELSE 'Complete'
     END AS reservation_status
-FROM Orders
-WHERE status = 'Reserved'
-ORDER BY order_datetime DESC;
+FROM Orders AS o
+WHERE o.status = 'Reserved'
+ORDER BY o.order_datetime DESC;
 
 -- QUERY 4 (3+ tables + SUM): Total units sold and revenue by supplier and category for completed orders
 SELECT
